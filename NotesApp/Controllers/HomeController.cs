@@ -6,7 +6,6 @@ namespace NotesApp.Controllers
     {
         public IActionResult Index()
         {
-            // Просто перенаправляємо на Notes/Index, бо вся логіка нотаток там
             return RedirectToAction("Index", "Notes");
         }
 
