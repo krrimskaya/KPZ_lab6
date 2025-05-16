@@ -6,7 +6,8 @@ namespace NotesApp.Controllers
     {
         public IActionResult Index()
         {
-            return View(); 
+            // Просто перенаправляємо на Notes/Index, бо вся логіка нотаток там
+            return RedirectToAction("Index", "Notes");
         }
 
         public IActionResult Privacy()
@@ -14,6 +15,7 @@ namespace NotesApp.Controllers
             return View();
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View();
