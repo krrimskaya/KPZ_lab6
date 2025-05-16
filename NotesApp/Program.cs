@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using NotesApp.Data; // простір імен для DbContext
+using NotesApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Отримати рядок підключення до SQLite
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Використовуємо SQLite замість SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -29,6 +27,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Notes}/{action=Index}/{id?}");
 
 app.Run();
