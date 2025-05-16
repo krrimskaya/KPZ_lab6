@@ -1,34 +1,47 @@
-﻿@model IEnumerable<NotesApp.Models.Note>
+﻿@model List<NotesApp.Models.Note>
 
-<h1>All Notes</h1>
+@{
+    ViewData["Title"] = "Notes List";
+}
 
-<p><a asp-action="Create">Add New Note</a></p>
+<h2>Notes</h2>
 
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Created At</th>
-            <th>Reminder</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var note in Model)
-    {
-        <tr>
-            <td>@note.Title</td>
-            <td>@note.CreatedAt.ToString("g")</td>
-            <td>
-                @if(note.ReminderAt.HasValue)
-                {
-                    @note.ReminderAt.Value.ToString("g")
-                }
-                else
-                {
-                    <em>No reminder</em>
-                }
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+<p>
+    <a href="@Url.Action("Create", "Notes")" class="btn btn-success">Add New Note</a>
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Created At</th>
+                <th>Reminder At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <td>@note.Title</td>
+                <td>@note.Content</td>
+                <td>@note.CreatedAt.ToString("g")</td>
+                <td>@(note.ReminderAt.HasValue ? note.ReminderAt.Value.ToString("g") : "")</td>
+                <td>
+                    <form asp-action="Delete" asp-controller="Notes" method="post" onsubmit="return confirm('Are you sure you want to delete this note?');">
+                        <input type="hidden" name="id" value="@note.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No notes found.</p>
+}
