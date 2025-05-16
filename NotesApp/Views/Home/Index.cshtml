@@ -1,8 +1,34 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<NotesApp.Models.Note>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>All Notes</h1>
+
+<p><a asp-action="Create">Add New Note</a></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Created At</th>
+            <th>Reminder</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var note in Model)
+    {
+        <tr>
+            <td>@note.Title</td>
+            <td>@note.CreatedAt.ToString("g")</td>
+            <td>
+                @if(note.ReminderAt.HasValue)
+                {
+                    @note.ReminderAt.Value.ToString("g")
+                }
+                else
+                {
+                    <em>No reminder</em>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

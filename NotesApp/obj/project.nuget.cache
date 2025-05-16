@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7Mnc4gZVYb0=",
+  "dgSpecHash": "o6rKD3yWBlY=",
   "success": true,
-  "projectFilePath": "/Users/anastasiavorobey/Desktop/reminder/NotesApp/NotesApp.csproj",
+  "projectFilePath": "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/NotesApp.csproj",
   "expectedPackageFiles": [
     "/Users/anastasiavorobey/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/Users/anastasiavorobey/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",

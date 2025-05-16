@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/anastasiavorobey/Desktop/reminder/NotesApp/NotesApp.csproj": {}
+    "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/NotesApp.csproj": {}
   },
   "projects": {
-    "/Users/anastasiavorobey/Desktop/reminder/NotesApp/NotesApp.csproj": {
+    "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/NotesApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/anastasiavorobey/Desktop/reminder/NotesApp/NotesApp.csproj",
+        "projectUniqueName": "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/NotesApp.csproj",
         "projectName": "NotesApp",
-        "projectPath": "/Users/anastasiavorobey/Desktop/reminder/NotesApp/NotesApp.csproj",
+        "projectPath": "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/NotesApp.csproj",
         "packagesPath": "/Users/anastasiavorobey/.nuget/packages/",
-        "outputPath": "/Users/anastasiavorobey/Desktop/reminder/NotesApp/obj/",
+        "outputPath": "/Users/anastasiavorobey/Desktop/KPZ_lab6/NotesApp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/anastasiavorobey/.nuget/NuGet/NuGet.Config"
