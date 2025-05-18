@@ -1,4 +1,3 @@
-// Додати новий файл Models/ResetPasswordViewModel.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace NotesApp.Models
