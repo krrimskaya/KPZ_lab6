@@ -1,7 +1,7 @@
 @model NotesApp.Models.ProfileViewModel
 
 @{
-    ViewData["Title"] = "User Profile";
+    ViewData["Title"] = "Профіль користувача";
 }
 
 <div class="container py-5">
@@ -13,34 +13,54 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-4">
-                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px; font-size: 2rem;">
+                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 80px; height: 80px; font-size: 2rem;">
                             @Model.Username?[0].ToString().ToUpper()
                         </div>
                         <div class="ms-4">
                             <h4 class="mb-1">@Model.Username</h4>
-                            <span class="badge bg-success">Active</span>
+                            <span class="badge bg-success">Активний</span>
                         </div>
                     </div>
-
+                    
                     <div class="mb-4">
-                        <h5>Account Information</h5>
+                        <h5>Інформація про акаунт</h5>
                         <hr>
                         <dl class="row">
-                            <dt class="col-sm-3">Email</dt>
+                            <dt class="col-sm-3">Електронна пошта</dt>
                             <dd class="col-sm-9">@Model.Email</dd>
-
-                            <dt class="col-sm-3">User ID</dt>
+                            
+                            <dt class="col-sm-3">ID користувача</dt>
                             <dd class="col-sm-9">@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value</dd>
+                            
+                            <dt class="col-sm-3">Статус пошти</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.EmailConfirmed)
+                                {
+                                    <span class="badge bg-success">Підтверджено</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Не підтверджено</span>
+                                }
+                            </dd>
                         </dl>
                     </div>
-
-                    <div class="d-flex gap-2">
+                    
+                    <div class="d-flex flex-wrap gap-2">
                         <a asp-action="ChangePassword" class="btn btn-outline-primary">
-                            <i class="bi bi-shield-lock"></i> Change Password
+                            <i class="bi bi-shield-lock me-1"></i>Змінити пароль
                         </a>
+                        
+                        @if (!Model.EmailConfirmed)
+                        {
+                            <a asp-action="VerifyEmail" class="btn btn-outline-warning">
+                                <i class="bi bi-envelope-check me-1"></i>Підтвердити пошту
+                            </a>
+                        }
+                        
                         <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
-                            <i class="bi bi-house-door"></i> Back to Home
+                            <i class="bi bi-house-door me-1"></i>На головну
                         </a>
                     </div>
                 </div>
@@ -56,6 +76,15 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+        }
+        
+        .card {
+            border-radius: 10px;
+        }
+        
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.35em 0.65em;
         }
     </style>
 }
