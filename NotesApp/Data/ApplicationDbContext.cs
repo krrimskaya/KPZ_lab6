@@ -14,6 +14,7 @@ namespace NotesApp.Data
         public DbSet<Note> Notes { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<NoteTag> NoteTags { get; set; }
+        public DbSet<NoteHistory> NoteHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,12 +34,18 @@ namespace NotesApp.Data
                 .WithMany(t => t.NoteTags)
                 .HasForeignKey(nt => nt.TagId);
 
-            // Змініть властивість UserId на необов'язкову
             modelBuilder.Entity<Tag>()
                 .Property(t => t.UserId)
                 .IsRequired(false);
 
-            // Додавання стандартних тегів (UserId = null для стандартних тегів)
+            // Налаштування для історії нотаток
+            modelBuilder.Entity<NoteHistory>()
+                .HasOne(nh => nh.Note)
+                .WithMany()
+                .HasForeignKey(nh => nh.NoteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Додавання стандартних тегів
             modelBuilder.Entity<Tag>().HasData(
                 new Tag { Id = 1, Name = "Робота", Color = "#0d6efd", UserId = null },
                 new Tag { Id = 2, Name = "Навчання", Color = "#198754", UserId = null },

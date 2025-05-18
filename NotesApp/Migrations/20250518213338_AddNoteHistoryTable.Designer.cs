@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NotesApp.Data;
 
@@ -10,9 +11,11 @@ using NotesApp.Data;
 namespace NotesApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518213338_AddNoteHistoryTable")]
+    partial class AddNoteHistoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -308,44 +311,6 @@ namespace NotesApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Color = "#0d6efd",
-                            Name = "Робота"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Color = "#198754",
-                            Name = "Навчання"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Color = "#dc3545",
-                            Name = "Спорт"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Color = "#6f42c1",
-                            Name = "Особисте"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Color = "#fd7e14",
-                            Name = "Здоров'я"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Color = "#20c997",
-                            Name = "Фінанси"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
