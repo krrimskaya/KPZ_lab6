@@ -55,17 +55,21 @@ namespace NotesApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(
+                model.Email, 
+                model.Password, 
+                model.RememberMe, 
+                lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return LocalRedirect(returnUrl ?? Url.Content("~/"));
 
-            ModelState.AddModelError(string.Empty, "Невірний логін або пароль");
+            ModelState.AddModelError(string.Empty, "Invalid login attempt");
             return View(model);
         }
 
@@ -83,15 +87,13 @@ namespace NotesApp.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-                return NotFound();
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
 
-            var model = new ProfileViewModel
+            return View(new ProfileViewModel
             {
-                Email = user.Email,
-                Username = user.UserName
-            };
-
-            return View(model);
+                Username = user.UserName,
+                Email = user.Email
+            });
         }
     }
 }
