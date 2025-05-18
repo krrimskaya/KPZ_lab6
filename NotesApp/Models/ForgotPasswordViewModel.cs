@@ -1,4 +1,3 @@
-// Додати новий файл Models/ForgotPasswordViewModel.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace NotesApp.Models
