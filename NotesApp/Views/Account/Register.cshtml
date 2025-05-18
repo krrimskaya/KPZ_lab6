@@ -1,26 +1,142 @@
 @model NotesApp.Models.RegisterViewModel
 
-<h2>Register</h2>
+@{
+    ViewData["Title"] = "Реєстрація";
+}
 
-<form asp-action="Register" method="post">
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h2 class="mb-0 text-center"><i class="bi bi-person-plus me-2"></i>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mb-4">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-bold">Електронна пошта</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" class="form-control py-2" placeholder="example@gmail.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-bold">Пароль</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" type="password" class="form-control py-2" id="passwordInput" placeholder="Не менше 8 символів" />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small d-block mt-1"></span>
+                            <div class="form-text">Пароль повинен містити великі, малі літери, цифри та спецсимволи</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-bold">Підтвердження пароля</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control py-2" placeholder="Повторіть ваш пароль" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small d-block mt-1"></span>
+                        </div>
+                        
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary py-2 fw-bold">
+                                <i class="bi bi-person-check me-2"></i>Зареєструватись
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Вже маєте акаунт? <a asp-action="Login" class="text-decoration-none fw-bold">Увійти</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword"></span>
-    </div>
-    <button type="submit">Register</button>
-</form>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            border: none;
+            overflow: hidden;
+        }
+        .card-header {
+            border-radius: 0 !important;
+        }
+        .input-group-text {
+            background-color: #f8f9fa;
+        }
+        .form-control {
+            border-left: none;
+        }
+        .input-group .form-control:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+        .btn-primary {
+            background-color: #4e73df;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            transform: translateY(-2px);
+        }
+        .form-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+}
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Bootstrap validation
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
 }
