@@ -1,0 +1,104 @@
+@model List<NotesApp.Models.NoteHistory>
+@using NotesApp.Models
+
+@{
+    ViewData["Title"] = "Історія нотаток";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6 fw-bold text-primary">
+            <i class="bi bi-clock-history me-2"></i>@ViewData["Title"]
+        </h1>
+        
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="tagFilterDropdown" 
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-tag"></i> Фільтр за тегом
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="tagFilterDropdown">
+                <li><a class="dropdown-item" href="@Url.Action("Index")">Всі нотатки</a></li>
+                @foreach (var tag in ViewBag.Tags)
+                {
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("Index", new { tagId = tag.Id })">
+                            <span class="badge" style="background-color: @tag.Color">@tag.Name</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="list-group">
+            @foreach (var history in Model)
+            {
+                <div class="list-group-item mb-3 rounded-3 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">@history.Title</h5>
+                        <span class="badge bg-@GetBadgeClass(history.ChangeType)">
+                            @GetChangeTypeText(history.ChangeType)
+                        </span>
+                    </div>
+                    
+                    <div class="text-muted small mb-2">
+                        <i class="bi bi-clock"></i> @history.ChangedAt.ToString("g")
+                        @if (!string.IsNullOrEmpty(history.ChangedBy))
+                        {
+                            <span> • @history.ChangedBy</span>
+                        }
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(history.Content))
+                    {
+                        <p class="mb-2">@history.Content</p>
+                    }
+                    
+                    @if (history.Note?.NoteTags != null && history.Note.NoteTags.Any())
+                    {
+                        <div class="mt-2">
+                            @foreach (var noteTag in history.Note.NoteTags)
+                            {
+                                <span class="badge me-1" style="background-color: @noteTag.Tag.Color">
+                                    @noteTag.Tag.Name
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Історія нотаток порожня
+        </div>
+    }
+</div>
+
+@functions {
+    string GetBadgeClass(string changeType)
+    {
+        return changeType switch
+        {
+            "Created" => "success",
+            "Updated" => "primary",
+            "Deleted" => "danger",
+            _ => "secondary"
+        };
+    }
+    
+    string GetChangeTypeText(string changeType)
+    {
+        return changeType switch
+        {
+            "Created" => "Створено",
+            "Updated" => "Оновлено",
+            "Deleted" => "Видалено",
+            _ => changeType
+        };
+    }
+}

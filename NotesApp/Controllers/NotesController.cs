@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
 using NotesApp.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,25 +21,13 @@ namespace NotesApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var now = DateTime.Now;
             var notes = await _context.Notes
                 .Include(n => n.NoteTags)
                 .ThenInclude(nt => nt.Tag)
+                .Where(n => !n.ReminderAt.HasValue || n.ReminderAt > now)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
-
-            // Перевіряємо нагадування при завантаженні сторінки
-            var now = DateTime.Now;
-            var activeReminders = notes
-                .Where(n => n.ReminderAt.HasValue && n.ReminderAt <= now)
-                .ToList();
-
-            if (activeReminders.Any())
-            {
-                foreach (var note in activeReminders)
-                {
-                    TempData[$"Reminder_{note.Id}"] = $"Нагадування: {note.Title} - {note.Content}";
-                }
-            }
 
             return View("~/Views/Home/Index.cshtml", notes);
         }
@@ -54,10 +41,16 @@ namespace NotesApp.Controllers
                 note.CreatedAt = DateTime.Now;
                 _context.Add(note);
                 await _context.SaveChangesAsync();
+                
+                await RecordHistory(note.Id, "Created", note.Title, note.Content);
                 return RedirectToAction(nameof(Index));
             }
 
-            var notes = await _context.Notes.OrderByDescending(n => n.CreatedAt).ToListAsync();
+            var notes = await _context.Notes
+                .Where(n => !n.ReminderAt.HasValue || n.ReminderAt > DateTime.Now)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
             return View("~/Views/Home/Index.cshtml", notes);
         }
 
@@ -74,30 +67,21 @@ namespace NotesApp.Controllers
             if (string.IsNullOrWhiteSpace(title))
             {
                 ModelState.AddModelError("Title", "Заголовок обов'язковий");
-                var notes = await _context.Notes.OrderByDescending(n => n.CreatedAt).ToListAsync();
+                var notes = await _context.Notes
+                    .Where(n => !n.ReminderAt.HasValue || n.ReminderAt > DateTime.Now)
+                    .OrderByDescending(n => n.CreatedAt)
+                    .ToListAsync();
                 return View("~/Views/Home/Index.cshtml", notes);
             }
+
+            await RecordHistory(note.Id, "Updated", note.Title, note.Content);
 
             note.Title = title;
             note.Content = content;
             note.ReminderAt = reminderAt;
 
-            try
-            {
-                _context.Update(note);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Notes.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Update(note);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -112,9 +96,28 @@ namespace NotesApp.Controllers
                 return NotFound();
             }
 
+            await RecordHistory(note.Id, "Deleted", note.Title, note.Content);
+
             _context.Notes.Remove(note);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearReminder(int id)
+        {
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            note.ReminderAt = null;
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         [HttpGet]
@@ -176,20 +179,20 @@ namespace NotesApp.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ClearReminder(int id)
+        private async Task RecordHistory(int noteId, string changeType, string title, string content = null)
         {
-            var note = await _context.Notes.FindAsync(id);
-            if (note == null)
+            var history = new NoteHistory
             {
-                return NotFound();
-            }
+                NoteId = noteId,
+                Title = title,
+                Content = content,
+                ChangeType = changeType,
+                ChangedBy = User.Identity.Name,
+                ChangedAt = DateTime.Now
+            };
 
-            note.ReminderAt = null;
+            _context.NoteHistories.Add(history);
             await _context.SaveChangesAsync();
-            
-            return Ok();
         }
     }
 }
