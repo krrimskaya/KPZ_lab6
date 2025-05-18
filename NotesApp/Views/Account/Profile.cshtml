@@ -1,0 +1,61 @@
+@model NotesApp.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px; font-size: 2rem;">
+                            @Model.Username?[0].ToString().ToUpper()
+                        </div>
+                        <div class="ms-4">
+                            <h4 class="mb-1">@Model.Username</h4>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Account Information</h5>
+                        <hr>
+                        <dl class="row">
+                            <dt class="col-sm-3">Email</dt>
+                            <dd class="col-sm-9">@Model.Email</dd>
+
+                            <dt class="col-sm-3">User ID</dt>
+                            <dd class="col-sm-9">@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value</dd>
+                        </dl>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="ChangePassword" class="btn btn-outline-primary">
+                            <i class="bi bi-shield-lock"></i> Change Password
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                            <i class="bi bi-house-door"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+}
