@@ -148,3 +148,34 @@ body {
       grid-template-columns: 1fr;
   }
 }
+
+/* Анімації для сповіщень */
+@keyframes slideIn {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
+}
+
+.notification {
+  animation: slideIn 0.5s forwards;
+  min-width: 300px;
+  margin-bottom: 10px;
+}
+
+.notification.fade-out {
+  animation: fadeOut 0.5s forwards;
+}

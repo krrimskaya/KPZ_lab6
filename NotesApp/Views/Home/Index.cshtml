@@ -15,66 +15,65 @@
         </button>
     </div>
 
+    <!-- Контейнер для сповіщень -->
+    <div id="notifications-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"></div>
+
     @if (Model.Any())
     {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="notes-grid">
             @foreach (var note in Model)
             {
-                <div class="col">
-                    <div class="card note-card h-100 border-0 shadow-sm">
-                        <div class="card-body position-relative">
-                            @if (note.ReminderAt.HasValue)
-                            {
-                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
-                                    <i class="bi bi-alarm me-1"></i>@note.ReminderAt?.ToString("g")
-                                </span>
-                            }
-                            <h5 class="card-title fw-bold text-truncate">@note.Title</h5>
-                            <p class="card-text note-content">@note.Content</p>
-                            
-                            <div class="text-muted small mb-3">
-                                <i class="bi bi-clock me-1"></i>Створено: @note.CreatedAt.ToString("g")
+                <div class="note-card card" id="note-card-@note.Id">
+                    <div class="card-body position-relative">
+                        @if (note.ReminderAt.HasValue)
+                        {
+                            <span class="note-reminder">
+                                <i class="bi bi-alarm me-1"></i>@note.ReminderAt?.ToString("g")
+                            </span>
+                        }
+                        <h5 class="card-title fw-bold">@note.Title</h5>
+                        <p class="card-text note-content">@note.Content</p>
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-clock me-1"></i>Створено: @note.CreatedAt.ToString("g")
+                        </div>
+                        <div class="mb-3">
+                            <div id="noteTags-@note.Id" class="d-flex flex-wrap gap-1 mb-2">
+                                @foreach (var noteTag in note.NoteTags)
+                                {
+                                    <span class="badge" style="background-color: @noteTag.Tag.Color">
+                                        @noteTag.Tag.Name
+                                        <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag"
+                                                data-note-id="@note.Id" data-tag-id="@noteTag.TagId">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </span>
+                                }
                             </div>
-
-                            <div class="mb-3">
-                                <div id="noteTags-@note.Id" class="d-flex flex-wrap gap-1 mb-2">
-                                    @foreach (var noteTag in note.NoteTags)
-                                    {
-                                        <span class="badge" style="background-color: @noteTag.Tag.Color">
-                                            @noteTag.Tag.Name
-                                            <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag" 
-                                                    data-note-id="@note.Id" data-tag-id="@noteTag.TagId">
-                                                <i class="bi bi-x"></i>
-                                            </button>
-                                        </span>
-                                    }
-                                </div>
-                                <button class="btn btn-sm btn-outline-secondary add-tag-btn" 
-                                        data-note-id="@note.Id" data-bs-toggle="modal" data-bs-target="#tagsModal">
-                                    <i class="bi bi-plus"></i> Додати теги
+                            <button class="btn btn-sm btn-outline-secondary add-tag-btn"
+                                    data-note-id="@note.Id" data-bs-toggle="modal" data-bs-target="#tagsModal">
+                                <i class="bi bi-plus"></i> Додати теги
+                            </button>
+                        </div>
+                        <div class="note-actions">
+                            <button class="btn btn-outline-primary rounded-pill px-3"
+                                    data-bs-toggle="modal" data-bs-target="#editModal-@note.Id">
+                                <i class="bi bi-pencil me-1"></i> Редагувати
+                            </button>
+                            <form asp-controller="Notes" asp-action="Delete" method="post"
+                                  onsubmit="return confirm('Ви впевнені, що хочете видалити цю нотатку?');">
+                                <input type="hidden" name="id" value="@note.Id" />
+                                <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
+                                    <i class="bi bi-trash me-1"></i> Видалити
                                 </button>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
-                                        data-bs-toggle="modal" data-bs-target="#editModal-@note.Id">
-                                    <i class="bi bi-pencil me-1"></i> Редагувати
-                                </button>
-                                <form asp-controller="Notes" asp-action="Delete" method="post"
-                                      onsubmit="return confirm('Ви впевнені, що хочете видалити цю нотатку?');">
-                                    <input type="hidden" name="id" value="@note.Id" />
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                        <i class="bi bi-trash me-1"></i> Видалити
-                                    </button>
-                                </form>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
 
+                <!-- Edit Modal -->
                 <div class="modal fade" id="editModal-@note.Id" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 shadow">
+                        <div class="modal-content">
                             <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Редагувати нотатку</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -84,20 +83,20 @@
                                     <input type="hidden" name="id" value="@note.Id" />
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Заголовок*</label>
-                                        <input type="text" name="title" class="form-control rounded-3" value="@note.Title" required />
+                                        <input type="text" name="title" class="form-control" value="@note.Title" required />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Вміст</label>
-                                        <textarea name="content" class="form-control rounded-3" rows="5" style="resize: none;">@note.Content</textarea>
+                                        <textarea name="content" class="form-control" rows="5" style="resize: none;">@note.Content</textarea>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold"><i class="bi bi-alarm me-1"></i>Нагадування</label>
-                                        <input type="datetime-local" name="reminderAt" class="form-control rounded-3" 
+                                        <input type="datetime-local" name="reminderAt" class="form-control"
                                                value="@(note.ReminderAt?.ToString("yyyy-MM-ddTHH:mm"))" />
                                     </div>
                                 </div>
                                 <div class="modal-footer border-0">
-                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
+                                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
                                     <button type="submit" class="btn btn-primary rounded-pill px-4">
                                         <i class="bi bi-save me-1"></i> Зберегти
                                     </button>
@@ -124,9 +123,10 @@
     }
 </div>
 
+<!-- Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
+        <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Нова нотатка</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -135,19 +135,19 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Заголовок*</label>
-                        <input type="text" name="Title" class="form-control rounded-3" required />
+                        <input type="text" name="Title" class="form-control" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Вміст</label>
-                        <textarea name="Content" class="form-control rounded-3" rows="5" style="resize: none;"></textarea>
+                        <textarea name="Content" class="form-control" rows="5" style="resize: none;"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold"><i class="bi bi-alarm me-1"></i>Нагадування</label>
-                        <input type="datetime-local" name="ReminderAt" class="form-control rounded-3" />
+                        <input type="datetime-local" name="ReminderAt" class="form-control" />
                     </div>
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4">
                         <i class="bi bi-save me-1"></i> Зберегти
                     </button>
@@ -157,6 +157,7 @@
     </div>
 </div>
 
+<!-- Tags Modal -->
 <div class="modal fade" id="tagsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -178,15 +179,6 @@
 @section Styles {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        .note-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-radius: 12px !important;
-            overflow: hidden;
-        }
-        .note-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-        }
         .note-content {
             display: -webkit-box;
             -webkit-line-clamp: 4;
@@ -195,52 +187,71 @@
             text-overflow: ellipsis;
             min-height: 6em;
         }
+        
         .empty-state {
             max-width: 500px;
             margin: 0 auto;
         }
-        .modal-content {
-            border-radius: 12px !important;
-        }
-        .btn {
-            transition: all 0.2s ease;
-        }
-        .form-control, .form-select {
-            padding: 0.75rem 1rem;
-        }
-        textarea.form-control {
-            min-height: 150px;
-        }
+        
         .tag-item {
             cursor: pointer;
             transition: all 0.2s;
         }
+        
         .tag-item.selected {
             transform: scale(1.05);
-            box-shadow: 0 0 0 2px #0d6efd;
-        }
-        .modal-backdrop.show {
-            opacity: 0.5 !important;
-        }
-        .modal-backdrop {
-            opacity: 0.5 !important;
+            box-shadow: 0 0 0 2px #258cfb;
         }
         
-        body.modal-open {
-            overflow: auto;
-            padding-right: 0 !important;
-        }
-        
-        /* Стилі для вибраних тегів */
-        .tag-item.selected {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 2px #0d6efd;
+        .notification {
             position: relative;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #ffc107;
+            min-width: 300px;
         }
         
-        .tag-item.selected::after {
-            content: '✓';
-            margin-left: 5px;
+        .notification-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .notification-header i {
+            color: #ffc107;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .note-card {
+            transition: all 0.3s ease;
+        }
+        
+        .note-reminder {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4361ee;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
     </style>
 }
@@ -257,9 +268,9 @@
                     tags.forEach(function(tag) {
                         const isSelected = selectedTags.includes(tag.id);
                         $('#tagsContainer').append(`
-                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}" 
-                                 style="background-color: ${tag.color}"
-                                 data-tag-id="${tag.id}">
+                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}"
+                                style="background-color: ${tag.color}"
+                                data-tag-id="${tag.id}">
                                 ${tag.name}
                                 ${isSelected ? '<i class="bi bi-check ms-1"></i>' : ''}
                             </div>
@@ -272,7 +283,6 @@
             $(document).on('click', '.tag-item', function() {
                 const tagId = $(this).data('tag-id');
                 const index = selectedTags.indexOf(tagId);
-                
                 if (index === -1) {
                     selectedTags.push(tagId);
                     $(this).addClass('selected');
@@ -287,7 +297,6 @@
             // Додавання вибраних тегів
             $('#addSelectedTags').click(function() {
                 if (!currentNoteId || selectedTags.length === 0) return;
-                
                 const requests = selectedTags.map(tagId => {
                     return $.post('/Notes/AddTagToNote', {
                         noteId: currentNoteId,
@@ -306,23 +315,6 @@
                     });
             });
 
-            // Правильне закриття модального вікна
-            function closeTagsModalProperly() {
-                // Скидаємо вибрані теги
-                selectedTags = [];
-                currentNoteId = null;
-                
-                // Отримуємо екземпляр модального вікна
-                const modal = bootstrap.Modal.getInstance(document.getElementById('tagsModal'));
-                
-                // Приховуємо модальне вікно
-                modal.hide();
-                
-                // Видаляємо залишковий фон
-                $('body').removeClass('modal-open');
-                $('.modal-backdrop').remove();
-            }
-
             // Завантаження тегів для нотатки
             function loadNoteTags(noteId) {
                 $.get(`/Notes/GetNoteTags?noteId=${noteId}`, function(tags) {
@@ -331,8 +323,8 @@
                         $(`#noteTags-${noteId}`).append(`
                             <span class="badge me-1 mb-1" style="background-color: ${tag.color}">
                                 ${tag.name}
-                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag" 
-                                        data-note-id="${noteId}" data-tag-id="${tag.id}">
+                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag"
+                                    data-note-id="${noteId}" data-tag-id="${tag.id}">
                                     <i class="bi bi-x"></i>
                                 </button>
                             </span>
@@ -352,7 +344,6 @@
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
                 const tagId = $(this).data('tag-id');
-                
                 $.post('/Notes/RemoveTagFromNote', {
                     noteId: noteId,
                     tagId: tagId,
@@ -368,11 +359,81 @@
                 <text>loadNoteTags(@note.Id);</text>
             }
 
-            // Додатковий обробник для правильного закриття модального вікна
-            $('#tagsModal').on('hidden.bs.modal', function () {
-                $('body').removeClass('modal-open');
-                $('.modal-backdrop').remove();
-            });
+            // Функція для показу сповіщення
+            function showNotification(noteId, title, content) {
+                const notificationId = 'notification-' + Date.now();
+                const notification = $(`
+                    <div id="${notificationId}" class="notification">
+                        <div class="notification-header">
+                            <i class="bi bi-bell-fill"></i>
+                            <h6 class="mb-0">Нагадування</h6>
+                        </div>
+                        <hr class="my-2">
+                        <strong>${title}</strong>
+                        <p class="mb-0">${content}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `);
+                
+                // Додаємо анімацію slideIn через CSS
+                notification.css({
+                    'animation': 'slideIn 0.5s forwards',
+                    'transform': 'translateX(100%)',
+                    'opacity': '0'
+                });
+                
+                $('#notifications-container').append(notification);
+                
+                // Запускаємо анімацію
+                setTimeout(() => {
+                    notification.css({
+                        'transform': 'translateX(0)',
+                        'opacity': '1'
+                    });
+                }, 10);
+                
+                // Видаляємо нотатку через 3 секунди
+                setTimeout(() => {
+                    $(`#note-card-${noteId}`).fadeOut(500, function() {
+                        $(this).remove();
+                    });
+                }, 3000);
+                
+                // Автоматично закриваємо сповіщення через 10 секунд
+                setTimeout(() => {
+                    notification.css({
+                        'opacity': '0',
+                        'transition': 'opacity 0.5s ease'
+                    });
+                    setTimeout(() => notification.remove(), 500);
+                }, 10000);
+                
+                // Можливість закрити вручну
+                notification.find('.btn-close').click(function() {
+                    notification.remove();
+                });
+            }
+
+            // Функція для перевірки нагадувань
+            function checkReminders() {
+                @foreach (var note in Model.Where(n => n.ReminderAt.HasValue))
+                {
+                    <text>
+                    var reminderTime = new Date('@note.ReminderAt?.ToString("o")');
+                    var now = new Date();
+                    
+                    if (now >= reminderTime) {
+                        showNotification(@note.Id, '@Html.Raw(note.Title.Replace("'", "\\'"))', '@Html.Raw(note.Content.Replace("'", "\\'"))');
+                    }
+                    </text>
+                }
+            }
+
+            // Перевіряємо нагадування кожну хвилину
+            setInterval(checkReminders, 60000);
+
+            // Перевіримо одразу при завантаженні сторінки
+            checkReminders();
         });
     </script>
 }

@@ -28,6 +28,20 @@ namespace NotesApp.Controllers
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
 
+            // Перевіряємо нагадування при завантаженні сторінки
+            var now = DateTime.Now;
+            var activeReminders = notes
+                .Where(n => n.ReminderAt.HasValue && n.ReminderAt <= now)
+                .ToList();
+
+            if (activeReminders.Any())
+            {
+                foreach (var note in activeReminders)
+                {
+                    TempData[$"Reminder_{note.Id}"] = $"Нагадування: {note.Title} - {note.Content}";
+                }
+            }
+
             return View("~/Views/Home/Index.cshtml", notes);
         }
 
@@ -127,7 +141,6 @@ namespace NotesApp.Controllers
             var note = await _context.Notes
                 .Include(n => n.NoteTags)
                 .FirstOrDefaultAsync(n => n.Id == noteId);
-
             if (note == null)
             {
                 return NotFound();
@@ -154,13 +167,28 @@ namespace NotesApp.Controllers
         {
             var noteTag = await _context.NoteTags
                 .FirstOrDefaultAsync(nt => nt.NoteId == noteId && nt.TagId == tagId);
-
             if (noteTag != null)
             {
                 _context.NoteTags.Remove(noteTag);
                 await _context.SaveChangesAsync();
             }
 
+            return Ok();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearReminder(int id)
+        {
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            note.ReminderAt = null;
+            await _context.SaveChangesAsync();
+            
             return Ok();
         }
     }
