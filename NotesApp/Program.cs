@@ -22,7 +22,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultUI()  // Important for Razor Pages Identity UI
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
