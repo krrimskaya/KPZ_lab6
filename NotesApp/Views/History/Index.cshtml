@@ -11,22 +11,28 @@
             <i class="bi bi-clock-history me-2"></i>@ViewData["Title"]
         </h1>
         
-        <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="tagFilterDropdown" 
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-tag"></i> Фільтр за тегом
+        <div>
+            <div class="dropdown d-inline-block me-2">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="tagFilterDropdown" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-tag"></i> Фільтр за тегом
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="tagFilterDropdown">
+                    <li><a class="dropdown-item" href="@Url.Action("Index")">Всі нотатки</a></li>
+                    @foreach (var tag in ViewBag.Tags)
+                    {
+                        <li>
+                            <a class="dropdown-item" href="@Url.Action("Index", new { tagId = tag.Id })">
+                                <span class="badge" style="background-color: @tag.Color">@tag.Name</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#clearHistoryModal">
+                <i class="bi bi-trash"></i> Очистити історію
             </button>
-            <ul class="dropdown-menu" aria-labelledby="tagFilterDropdown">
-                <li><a class="dropdown-item" href="@Url.Action("Index")">Всі нотатки</a></li>
-                @foreach (var tag in ViewBag.Tags)
-                {
-                    <li>
-                        <a class="dropdown-item" href="@Url.Action("Index", new { tagId = tag.Id })">
-                            <span class="badge" style="background-color: @tag.Color">@tag.Name</span>
-                        </a>
-                    </li>
-                }
-            </ul>
         </div>
     </div>
 
@@ -77,6 +83,51 @@
             <i class="bi bi-info-circle"></i> Історія нотаток порожня
         </div>
     }
+</div>
+
+<!-- Clear History Modal -->
+<div class="modal fade" id="clearHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Очищення історії</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ви впевнені, що хочете очистити історію нотаток?</p>
+                <p class="text-muted small">Цю дію не можна скасувати. Буде видалена вся історія змін нотаток.</p>
+                
+                @if (ViewBag.SelectedTagId != null)
+                {
+                    <div class="alert alert-warning mt-3">
+                        <i class="bi bi-info-circle"></i> Ви переглядаєте історію за тегом. 
+                        Буде видалена тільки історія, пов'язана з цим тегом.
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                
+                @if (ViewBag.SelectedTagId != null)
+                {
+                    <form asp-action="ClearByTag" method="post">
+                        <input type="hidden" name="tagId" value="@ViewBag.SelectedTagId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Очистити для цього тегу
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="ClearAll" method="post">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Очистити всю історію
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 
 @functions {

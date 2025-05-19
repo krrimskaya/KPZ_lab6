@@ -15,7 +15,7 @@
         </button>
     </div>
 
-    <!-- Контейнер для сповіщень -->
+    <!-- Notifications Container -->
     <div id="notifications-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"></div>
 
     @if (Model.Any())
@@ -23,7 +23,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="notes-container">
             @foreach (var note in Model)
             {
-                <div class="col note-item">
+                <div class="col">
                     <div class="card note-card h-100 border-0 shadow-sm" id="note-card-@note.Id">
                         <div class="card-body position-relative">
                             @if (note.ReminderAt.HasValue)
@@ -34,72 +34,40 @@
                             }
                             <h5 class="card-title fw-bold text-truncate">@note.Title</h5>
                             <p class="card-text note-content">@note.Content</p>
+                            
                             <div class="text-muted small mb-3">
                                 <i class="bi bi-clock me-1"></i>Створено: @note.CreatedAt.ToString("g")
                             </div>
+
                             <div class="mb-3">
                                 <div id="noteTags-@note.Id" class="d-flex flex-wrap gap-1 mb-2">
                                     @foreach (var noteTag in note.NoteTags)
                                     {
                                         <span class="badge" style="background-color: @noteTag.Tag.Color">
                                             @noteTag.Tag.Name
-                                            <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag"
+                                            <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag" 
                                                     data-note-id="@note.Id" data-tag-id="@noteTag.TagId">
                                                 <i class="bi bi-x"></i>
                                             </button>
                                         </span>
                                     }
                                 </div>
-                                <button class="btn btn-sm btn-outline-secondary add-tag-btn"
+                                <button class="btn btn-sm btn-outline-secondary add-tag-btn" 
                                         data-note-id="@note.Id" data-bs-toggle="modal" data-bs-target="#tagsModal">
                                     <i class="bi bi-plus"></i> Додати теги
                                 </button>
                             </div>
+
                             <div class="d-flex justify-content-between align-items-center">
-                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
-                                        data-bs-toggle="modal" data-bs-target="#editModal-@note.Id">
+                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3 edit-note-btn"
+                                        data-note-id="@note.Id">
                                     <i class="bi bi-pencil me-1"></i> Редагувати
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 delete-note-btn" data-note-id="@note.Id">
+                                <button class="btn btn-sm btn-outline-danger rounded-pill px-3 delete-note-btn"
+                                        data-note-id="@note.Id">
                                     <i class="bi bi-trash me-1"></i> Видалити
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Edit Modal -->
-                <div class="modal fade" id="editModal-@note.Id" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 shadow">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Редагувати нотатку</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form asp-controller="Notes" asp-action="Edit" method="post" class="edit-note-form" data-note-id="@note.Id">
-                                <div class="modal-body">
-                                    <input type="hidden" name="id" value="@note.Id" />
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Заголовок*</label>
-                                        <input type="text" name="title" class="form-control rounded-3" value="@note.Title" required />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Вміст</label>
-                                        <textarea name="content" class="form-control rounded-3" rows="5" style="resize: none;">@note.Content</textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold"><i class="bi bi-alarm me-1"></i>Нагадування</label>
-                                        <input type="datetime-local" name="reminderAt" class="form-control rounded-3"
-                                               value="@(note.ReminderAt?.ToString("yyyy-MM-ddTHH:mm"))" />
-                                    </div>
-                                </div>
-                                <div class="modal-footer border-0">
-                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
-                                    <button type="submit" class="btn btn-primary rounded-pill px-4">
-                                        <i class="bi bi-save me-1"></i> Зберегти
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -121,7 +89,7 @@
     }
 </div>
 
-<!-- Create Modal -->
+<!-- Create Note Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -129,7 +97,7 @@
                 <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Нова нотатка</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-controller="Notes" asp-action="Create" method="post" id="create-note-form">
+            <form asp-controller="Notes" asp-action="Create" method="post">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Заголовок*</label>
@@ -155,21 +123,119 @@
     </div>
 </div>
 
-<!-- Tags Modal -->
+<!-- Edit Note Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Редагувати нотатку</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="edit-note-form" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editNoteId" />
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Заголовок*</label>
+                        <input type="text" id="editNoteTitle" name="title" class="form-control rounded-3" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Вміст</label>
+                        <textarea id="editNoteContent" name="content" class="form-control rounded-3" rows="5" style="resize: none;"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold"><i class="bi bi-alarm me-1"></i>Нагадування</label>
+                        <input type="datetime-local" id="editNoteReminderAt" name="reminderAt" class="form-control rounded-3" />
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        <i class="bi bi-save me-1"></i> Зберегти
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Підтвердження видалення</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ви впевнені, що хочете видалити нотатку "<span id="noteToDeleteTitle"></span>"?</p>
+                <p class="text-muted small">Цю дію не можна скасувати.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteNote">Видалити</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tags Selection Modal -->
 <div class="modal fade" id="tagsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Оберіть теги</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-tags me-2"></i>Оберіть теги</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Доступні теги</h6>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createTagModal">
+                        <i class="bi bi-plus"></i> Новий тег
+                    </button>
+                </div>
                 <div id="tagsContainer" class="d-flex flex-wrap gap-2"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
                 <button type="button" class="btn btn-primary" id="addSelectedTags">Додати вибрані теги</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Tag Modal -->
+<div class="modal fade" id="createTagModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-tag me-2"></i>Створити новий тег</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="create-tag-form">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Назва тегу*</label>
+                        <input type="text" id="tagName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Колір</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="color-option selected" data-color="#6c757d" style="background-color: #6c757d"></div>
+                            <div class="color-option" data-color="#0d6efd" style="background-color: #0d6efd"></div>
+                            <div class="color-option" data-color="#dc3545" style="background-color: #dc3545"></div>
+                            <div class="color-option" data-color="#198754" style="background-color: #198754"></div>
+                            <div class="color-option" data-color="#ffc107" style="background-color: #ffc107"></div>
+                            <div class="color-option" data-color="#fd7e14" style="background-color: #fd7e14"></div>
+                            <div class="color-option" data-color="#6f42c1" style="background-color: #6f42c1"></div>
+                        </div>
+                        <input type="hidden" id="tagColor" value="#6c757d" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -177,6 +243,15 @@
 @section Styles {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+        .note-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 12px !important;
+            overflow: hidden;
+        }
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
         .note-content {
             display: -webkit-box;
             -webkit-line-clamp: 4;
@@ -185,65 +260,74 @@
             text-overflow: ellipsis;
             min-height: 6em;
         }
-        
         .empty-state {
             max-width: 500px;
             margin: 0 auto;
         }
-        
-        .notification {
-            position: relative;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-left: 4px solid #ffc107;
-            min-width: 300px;
-            animation: slideIn 0.5s forwards;
+        .modal-content {
+            border-radius: 12px !important;
+        }
+        .btn {
+            transition: all 0.2s ease;
+        }
+        .form-control, .form-select {
+            padding: 0.75rem 1rem;
+        }
+        textarea.form-control {
+            min-height: 150px;
+        }
+        .tag-item {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tag-item.selected {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 2px #0d6efd;
+        }
+        .modal-backdrop.show {
+            opacity: 0.5 !important;
         }
         
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+        }
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        .color-option.selected {
+            border-color: #000;
+            transform: scale(1.1);
+        }
+        #tagsContainer {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* Animation for notifications */
+        .notification {
+            animation: slideIn 0.3s forwards;
+        }
         .notification.fade-out {
             animation: fadeOut 0.5s forwards;
         }
-        
-        /* Note animations */
-        .note-item {
-            transition: all 0.5s ease;
+        @@keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @@keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
         
-        .note-card {
-            transition: all 0.3s ease;
-            transform-origin: top;
-        }
-        
+        /* Animation for note deletion */
         .note-card.fade-out {
             animation: fadeOutScale 0.5s forwards;
         }
-        
-        .note-card.slide-out {
-            animation: slideOutRight 0.5s forwards;
-        }
-        
-        .note-card.fall-out {
-            animation: fallOut 0.5s forwards;
-        }
-        
-        .new-note {
-            animation: fadeInScale 0.5s forwards;
-        }
-        
-        @@keyframes fadeInScale {
-            0% {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
         @@keyframes fadeOutScale {
             0% {
                 opacity: 1;
@@ -258,46 +342,6 @@
                 overflow: hidden;
             }
         }
-        
-        @@keyframes slideOutRight {
-            0% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(100%);
-                height: 0;
-                padding: 0;
-                margin: 0;
-                overflow: hidden;
-            }
-        }
-        
-        @@keyframes fallOut {
-            0% {
-                opacity: 1;
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100px) rotate(10deg);
-                height: 0;
-                padding: 0;
-                margin: 0;
-                overflow: hidden;
-            }
-        }
-        
-        @@keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @@keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
     </style>
 }
 
@@ -306,76 +350,60 @@
         $(document).ready(function() {
             let selectedTags = [];
             let currentNoteId = null;
+            let selectedColor = "#6c757d";
+            let noteToDelete = null;
 
-            // Функція для видалення нотатки з анімацією
-            function deleteNoteWithAnimation(noteId, animationType = 'fade-out') {
-                const $noteCard = $(`#note-card-${noteId}`);
-                const $noteItem = $noteCard.closest('.note-item');
-                
-                // Додаємо клас анімації
-                $noteCard.addClass(animationType);
-                
-                // Видаляємо елемент після завершення анімації
-                setTimeout(() => {
-                    $noteItem.remove();
-                    
-                    // Перевіряємо, чи залишилися нотатки
-                    if ($('#notes-container .note-item').length === 0) {
-                        location.reload(); // Перезавантажуємо сторінку для показу стану "Нотаток не знайдено"
-                    }
-                }, 500);
-                
-                // Відправляємо запит на сервер для видалення
-                $.post('/Notes/Delete', {
-                    id: noteId,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                });
-            }
-
-            // Обробник кнопки видалення
-            $(document).on('click', '.delete-note-btn', function() {
-                const noteId = $(this).data('note-id');
-                if (confirm('Ви впевнені, що хочете видалити цю нотатку?')) {
-                    const randomAnimation = ['fade-out', 'slide-out', 'fall-out'][Math.floor(Math.random() * 3)];
-                    deleteNoteWithAnimation(noteId, randomAnimation);
-                }
-            });
-
-            // Обробник форми створення нотатки
-            $('#create-note-form').on('submit', function(e) {
+            // Delete note functionality
+            $(document).on('click', '.delete-note-btn', function(e) {
                 e.preventDefault();
-                const form = $(this);
+                const noteId = $(this).data('note-id');
                 
-                $.ajax({
-                    url: form.attr('action'),
-                    method: form.attr('method'),
-                    data: form.serialize(),
-                    success: function(response) {
-                        $('#createModal').modal('hide');
-                        form.trigger('reset');
-                        
-                        // Якщо це перша нотатка - перезавантажуємо сторінку
-                        if ($('#notes-container .note-item').length === 0) {
-                            location.reload();
-                        } else {
-                            // Додаємо нову нотатку з анімацією
-                            // Тут потрібно буде додати логіку для додавання нової нотатки до DOM
-                            // Наприклад, через AJAX запит для отримання HTML нової нотатки
-                        }
-                    }
+                $.get(`/Notes/GetNoteForDelete?id=${noteId}`, function(note) {
+                    noteToDelete = note.id;
+                    $('#noteToDeleteTitle').text(note.title);
+                    $('#confirmDeleteModal').modal('show');
+                }).fail(function() {
+                    alert('Не вдалося завантажити інформацію про нотатку');
                 });
             });
 
-            // Решта функцій залишаються без змін
+            $('#confirmDeleteNote').click(function() {
+                if (!noteToDelete) return;
+                
+                const $noteCard = $(`#note-card-${noteToDelete}`);
+                $noteCard.addClass('fade-out');
+                
+                $.post('/Notes/Delete', {
+                    id: noteToDelete,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                })
+                .done(function() {
+                    setTimeout(() => {
+                        $noteCard.closest('.col').remove();
+                        
+                        if ($('#notes-container .col').length === 0) {
+                            location.reload();
+                        }
+                    }, 500);
+                })
+                .fail(function() {
+                    alert('Не вдалося видалити нотатку');
+                })
+                .always(function() {
+                    $('#confirmDeleteModal').modal('hide');
+                });
+            });
+
+            // Load tags for selection
             function loadTags() {
                 $.get('/Tag/GetAll', function(tags) {
                     $('#tagsContainer').empty();
                     tags.forEach(function(tag) {
                         const isSelected = selectedTags.includes(tag.id);
                         $('#tagsContainer').append(`
-                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}"
-                                style="background-color: ${tag.color}"
-                                data-tag-id="${tag.id}">
+                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}" 
+                                 style="background-color: ${tag.color}"
+                                 data-tag-id="${tag.id}">
                                 ${tag.name}
                                 ${isSelected ? '<i class="bi bi-check ms-1"></i>' : ''}
                             </div>
@@ -384,9 +412,11 @@
                 });
             }
 
+            // Handle tag selection
             $(document).on('click', '.tag-item', function() {
                 const tagId = $(this).data('tag-id');
                 const index = selectedTags.indexOf(tagId);
+                
                 if (index === -1) {
                     selectedTags.push(tagId);
                     $(this).addClass('selected');
@@ -398,8 +428,10 @@
                 }
             });
 
+            // Add selected tags to note
             $('#addSelectedTags').click(function() {
                 if (!currentNoteId || selectedTags.length === 0) return;
+                
                 const requests = selectedTags.map(tagId => {
                     return $.post('/Notes/AddTagToNote', {
                         noteId: currentNoteId,
@@ -411,14 +443,24 @@
                 Promise.all(requests)
                     .then(() => {
                         loadNoteTags(currentNoteId);
-                        $('#tagsModal').modal('hide');
-                        selectedTags = [];
+                        closeTagsModalProperly();
                     })
                     .catch(error => {
                         console.error('Error adding tags:', error);
                     });
             });
 
+            // Close tags modal properly
+            function closeTagsModalProperly() {
+                selectedTags = [];
+                currentNoteId = null;
+                const modal = bootstrap.Modal.getInstance(document.getElementById('tagsModal'));
+                modal.hide();
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            }
+
+            // Load tags for a specific note
             function loadNoteTags(noteId) {
                 $.get(`/Notes/GetNoteTags?noteId=${noteId}`, function(tags) {
                     $(`#noteTags-${noteId}`).empty();
@@ -426,8 +468,8 @@
                         $(`#noteTags-${noteId}`).append(`
                             <span class="badge me-1 mb-1" style="background-color: ${tag.color}">
                                 ${tag.name}
-                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag"
-                                    data-note-id="${noteId}" data-tag-id="${tag.id}">
+                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag" 
+                                        data-note-id="${noteId}" data-tag-id="${tag.id}">
                                     <i class="bi bi-x"></i>
                                 </button>
                             </span>
@@ -436,16 +478,43 @@
                 });
             }
 
-            $(document).on('click', '.add-tag-btn', function() {
-                currentNoteId = $(this).data('note-id');
-                selectedTags = [];
-                loadTags();
+            // Color selection for new tags
+            $(document).on('click', '.color-option', function() {
+                $('.color-option').removeClass('selected');
+                $(this).addClass('selected');
+                selectedColor = $(this).data('color');
+                $('#tagColor').val(selectedColor);
             });
 
+            // Create new tag
+            $('#create-tag-form').on('submit', function(e) {
+                e.preventDefault();
+                const tagName = $('#tagName').val().trim();
+                
+                if (!tagName) {
+                    alert('Будь ласка, введіть назву тегу');
+                    return;
+                }
+
+                $.post('/Tag/Create', {
+                    name: tagName,
+                    color: selectedColor,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                }, function(tag) {
+                    $('#createTagModal').modal('hide');
+                    $('#tagName').val('');
+                    loadTags(); // Refresh tags list
+                }).fail(function() {
+                    alert('Не вдалося створити тег');
+                });
+            });
+
+            // Remove tag from note
             $(document).on('click', '.remove-note-tag', function(e) {
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
                 const tagId = $(this).data('tag-id');
+                
                 $.post('/Notes/RemoveTagFromNote', {
                     noteId: noteId,
                     tagId: tagId,
@@ -455,15 +524,86 @@
                 });
             });
 
+            // Open tag modal
+            $(document).on('click', '.add-tag-btn', function() {
+                currentNoteId = $(this).data('note-id');
+                loadTags();
+            });
+
+            // Initialize tags for existing notes
             @foreach (var note in Model)
             {
                 <text>loadNoteTags(@note.Id);</text>
             }
 
+            // Handle modal cleanup
+            $('#tagsModal').on('hidden.bs.modal', function () {
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            });
+
+            // Edit note functionality
+            $(document).on('click', '.edit-note-btn', function() {
+                const noteId = $(this).data('note-id');
+                $.get(`/Notes/GetNoteForEdit?id=${noteId}`, function(note) {
+                    $('#editNoteId').val(note.id);
+                    $('#editNoteTitle').val(note.title);
+                    $('#editNoteContent').val(note.content);
+                    $('#editNoteReminderAt').val(note.reminderAt);
+                    $('#editModal').modal('show');
+                }).fail(function() {
+                    alert('Не вдалося завантажити нотатку для редагування');
+                });
+            });
+
+            // Handle edit form submission
+            $('#edit-note-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    id: $('#editNoteId').val(),
+                    title: $('#editNoteTitle').val(),
+                    content: $('#editNoteContent').val(),
+                    reminderAt: $('#editNoteReminderAt').val(),
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                };
+                
+                $.post('/Notes/Edit', formData, function(response) {
+                    $('#editModal').modal('hide');
+                    location.reload();
+                }).fail(function() {
+                    alert('Не вдалося оновити нотатку');
+                });
+            });
+
+            // Check for reminders
+            function checkReminders() {
+                var now = new Date();
+                
+                @foreach (var note in Model.Where(n => n.ReminderAt.HasValue))
+                {
+                    <text>
+                    var reminderTime = new Date('@note.ReminderAt?.ToString("o")');
+                    
+                    if (now >= reminderTime) {
+                        showNotification(@note.Id, '@Html.Raw(note.Title.Replace("'", "\\'"))', '@Html.Raw(note.Content.Replace("'", "\\'"))');
+                        
+                        $.post('/Notes/ClearReminder', { 
+                            id: @note.Id,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        }).then(function() {
+                            $(`#note-card-${@note.Id}`).remove();
+                        });
+                    }
+                    </text>
+                }
+            }
+
+            // Show notification
             function showNotification(noteId, title, content) {
                 const notificationId = 'notification-' + Date.now();
                 const notification = $(`
-                    <div id="${notificationId}" class="notification">
+                    <div id="${notificationId}" class="notification alert alert-warning alert-dismissible fade show">
                         <div class="d-flex align-items-center mb-2">
                             <i class="bi bi-bell-fill me-2"></i>
                             <h6 class="mb-0">Нагадування</h6>
@@ -487,29 +627,7 @@
                 });
             }
 
-            function checkReminders() {
-                var now = new Date();
-                
-                @foreach (var note in Model.Where(n => n.ReminderAt.HasValue))
-                {
-                    <text>
-                    var reminderTime = new Date('@note.ReminderAt?.ToString("o")');
-                    
-                    if (now >= reminderTime) {
-                        showNotification(@note.Id, '@Html.Raw(note.Title.Replace("'", "\\'"))', '@Html.Raw(note.Content.Replace("'", "\\'"))');
-                        
-                        $.post('/Notes/ClearReminder', { 
-                            id: @note.Id,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                        }).then(function() {
-                            const randomAnimation = ['fade-out', 'slide-out', 'fall-out'][Math.floor(Math.random() * 3)];
-                            deleteNoteWithAnimation(@note.Id, randomAnimation);
-                        });
-                    }
-                    </text>
-                }
-            }
-
+            // Check reminders every minute
             setInterval(checkReminders, 60000);
             checkReminders();
         });

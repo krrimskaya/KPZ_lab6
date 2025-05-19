@@ -30,14 +30,40 @@ namespace NotesApp.Controllers
                 query = query.Where(nh => nh.Note.NoteTags.Any(nt => nt.TagId == tagId));
             }
 
-            var orderedQuery = query.OrderByDescending(nh => nh.ChangedAt);
-            var histories = await orderedQuery.ToListAsync();
+            var histories = await query.OrderByDescending(nh => nh.ChangedAt).ToListAsync();
             
             var tags = await _context.Tags.ToListAsync();
             ViewBag.Tags = tags;
             ViewBag.SelectedTagId = tagId;
 
             return View(histories);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearAll()
+        {
+            var allHistory = await _context.NoteHistories.ToListAsync();
+            _context.NoteHistories.RemoveRange(allHistory);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearByTag(int tagId)
+        {
+            var historiesToDelete = await _context.NoteHistories
+                .Include(nh => nh.Note)
+                .ThenInclude(n => n.NoteTags)
+                .Where(nh => nh.Note.NoteTags.Any(nt => nt.TagId == tagId))
+                .ToListAsync();
+
+            _context.NoteHistories.RemoveRange(historiesToDelete);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

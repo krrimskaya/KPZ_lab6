@@ -19,6 +19,7 @@ namespace NotesApp.Controllers
             _context = context;
         }
 
+        // GET: Notes
         public async Task<IActionResult> Index()
         {
             var now = DateTime.Now;
@@ -32,6 +33,7 @@ namespace NotesApp.Controllers
             return View("~/Views/Home/Index.cshtml", notes);
         }
 
+        // POST: Notes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Content,ReminderAt")] Note note)
@@ -54,6 +56,43 @@ namespace NotesApp.Controllers
             return View("~/Views/Home/Index.cshtml", notes);
         }
 
+        // GET: Notes/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> GetNoteForEdit(int id)
+        {
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                id = note.Id,
+                title = note.Title,
+                content = note.Content,
+                reminderAt = note.ReminderAt?.ToString("yyyy-MM-ddTHH:mm")
+            });
+        }
+
+        // GET: Notes/Delete/5
+        [HttpGet]
+        public async Task<IActionResult> GetNoteForDelete(int id)
+        {
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                id = note.Id,
+                title = note.Title
+            });
+        }
+
+        // POST: Notes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, string title, string content, DateTime? reminderAt)
@@ -66,12 +105,7 @@ namespace NotesApp.Controllers
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                ModelState.AddModelError("Title", "Заголовок обов'язковий");
-                var notes = await _context.Notes
-                    .Where(n => !n.ReminderAt.HasValue || n.ReminderAt > DateTime.Now)
-                    .OrderByDescending(n => n.CreatedAt)
-                    .ToListAsync();
-                return View("~/Views/Home/Index.cshtml", notes);
+                return BadRequest("Title is required");
             }
 
             await RecordHistory(note.Id, "Updated", note.Title, note.Content);
@@ -83,9 +117,10 @@ namespace NotesApp.Controllers
             _context.Update(note);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
+        // POST: Notes/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -101,9 +136,10 @@ namespace NotesApp.Controllers
             _context.Notes.Remove(note);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
+        // POST: Notes/ClearReminder/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearReminder(int id)
@@ -120,6 +156,7 @@ namespace NotesApp.Controllers
             return Ok();
         }
 
+        // GET: Notes/GetNoteTags/5
         [HttpGet]
         public async Task<IActionResult> GetNoteTags(int noteId)
         {
@@ -137,6 +174,7 @@ namespace NotesApp.Controllers
             return Ok(tags);
         }
 
+        // POST: Notes/AddTagToNote
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddTagToNote(int noteId, int tagId)
@@ -164,6 +202,7 @@ namespace NotesApp.Controllers
             return Ok();
         }
 
+        // POST: Notes/RemoveTagFromNote
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveTagFromNote(int noteId, int tagId)
