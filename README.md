@@ -200,3 +200,4 @@ setInterval(checkReminders, 60000);
 ### Кількість рядків в коді
 
 ![Lines](Results/Lines.png)  
+![Lines](Results/Lines2.png)  
