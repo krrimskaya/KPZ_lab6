@@ -1,36 +1,40 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using NotesApp.Models;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
+using NotesApp.Models;
+using NotesApp.Services;
+using System.Threading.Tasks;
 
 namespace NotesApp.Controllers
 {
-    public class PasswordController : Controller
+    [AllowAnonymous]
+    public class PasswordController : BaseController
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly PasswordService _passwordService;
+        private readonly AuthService _authService;
 
-        public PasswordController(UserManager<IdentityUser> userManager)
+        public PasswordController(
+      UserManager<IdentityUser> userManager,
+      PasswordService passwordService,
+      AuthService authService) : base(userManager)
         {
-            _userManager = userManager;
+            _passwordService = passwordService;
+            _authService = authService;
         }
 
+
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
-            return View("~/Views/Password/ForgotPassword.cshtml");
+            return View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View("~/Views/Password/ForgotPassword.cshtml", model);
+            if (!ModelState.IsValid) return View(model);
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
@@ -38,73 +42,74 @@ namespace NotesApp.Controllers
                 return RedirectToAction("ForgotPasswordConfirmation");
             }
 
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.Action(
-                "ResetPassword",
-                "Password",
-                new { userId = user.Id, code = code },
-                protocol: HttpContext.Request.Scheme);
+            var code = await _passwordService.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Password", new { userId = user.Id, code }, Request.Scheme);
 
-            // In a real app, you would send the email here
+
             return RedirectToAction("ForgotPasswordConfirmation");
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
         {
-            return View("~/Views/Password/ForgotPasswordConfirmation.cshtml");
+            return View();
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            if (code == null)
-            {
-                return BadRequest("A code must be supplied for password reset.");
-            }
-            else
-            {
-                var model = new ResetPasswordViewModel { Code = code };
-                return View("~/Views/Password/ResetPassword.cshtml", model);
-            }
+            return code == null
+                ? BadRequest("Для скидання пароля необхідно надати код.")
+                : View(new ResetPasswordViewModel { Code = code });
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("~/Views/Password/ResetPassword.cshtml", model);
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return RedirectToAction("ResetPasswordConfirmation");
-            }
+            var result = await _passwordService.ResetPasswordAsync(model.Email, model.Code, model.Password);
+            if (!result.Succeeded) return HandleIdentityErrors(result);
 
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation");
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return View("~/Views/Password/ResetPassword.cshtml", model);
+            return RedirectToAction("ResetPasswordConfirmation");
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
-            return View("~/Views/Password/ResetPasswordConfirmation.cshtml");
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await GetCurrentUserAsync();
+            if (user == null) return NotFound();
+
+            var result = await _passwordService.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (!result.Succeeded) return HandleIdentityErrors(result);
+
+            await _authService.LogoutAsync();
+            return RedirectToAction("ChangePasswordConfirmation");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePasswordConfirmation()
+        {
+            return View();
         }
     }
 }
