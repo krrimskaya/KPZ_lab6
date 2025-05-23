@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
 using NotesApp.Models;
 using NotesApp.Services;
-using System;
+using NotesApp.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,11 +15,16 @@ namespace NotesApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly NoteService _noteService;
+        private readonly IHistoryService _historyService;
 
-        public NotesController(ApplicationDbContext context, NoteService noteService)
+        public NotesController(
+            ApplicationDbContext context,
+            NoteService noteService,
+            IHistoryService historyService)
         {
-            _noteService = noteService;
             _context = context;
+            _noteService = noteService;
+            _historyService = historyService;
         }
 
         // GET: Notes
@@ -37,13 +42,17 @@ namespace NotesApp.Controllers
             if (ModelState.IsValid)
             {
                 await _noteService.CreateNoteAsync(note);
+                await _historyService.RecordAsync(
+                    note.Id,
+                    "Created",
+                    note.Title,
+                    note.Content);
 
-                await RecordHistory(note.Id, "Created", note.Title, note.Content);
                 return RedirectToAction(nameof(Index));
             }
 
-            var notes = await _noteService.GetAllNotesAsync();
-            return View("~/Views/Home/Index.cshtml", notes);
+            var all = await _noteService.GetAllNotesAsync();
+            return View("~/Views/Home/Index.cshtml", all);
         }
 
         // GET: Notes/Edit/5
@@ -51,10 +60,7 @@ namespace NotesApp.Controllers
         public async Task<IActionResult> GetNoteForEdit(int id)
         {
             var note = await _context.Notes.FindAsync(id);
-            if (note == null)
-            {
-                return NotFound();
-            }
+            if (note == null) return NotFound();
 
             return Ok(new
             {
@@ -70,10 +76,7 @@ namespace NotesApp.Controllers
         public async Task<IActionResult> GetNoteForDelete(int id)
         {
             var note = await _context.Notes.FindAsync(id);
-            if (note == null)
-            {
-                return NotFound();
-            }
+            if (note == null) return NotFound();
 
             return Ok(new
             {
@@ -88,33 +91,18 @@ namespace NotesApp.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var note = await _context.Notes.FindAsync(id);
-            if (note == null)
-            {
-                return NotFound();
-            }
+            if (note == null) return NotFound();
 
             _context.Notes.Remove(note);
             await _context.SaveChangesAsync();
 
-            await RecordHistory(note.Id, "Deleted", note.Title, note.Content);
+            await _historyService.RecordAsync(
+                note.Id,
+                "Deleted",
+                note.Title,
+                note.Content);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task RecordHistory(int noteId, string action, string title, string content)
-        {
-            var history = new NoteHistory
-            {
-                NoteId = noteId,
-                ChangeType = action,
-                Title = title,
-                Content = content,
-                ChangedAt = DateTime.Now,
-                ChangedBy = User.Identity?.Name ?? "Unknown"
-            };
-
-            _context.NoteHistories.Add(history);
-            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -126,14 +114,13 @@ namespace NotesApp.Controllers
                 .FirstOrDefaultAsync(n => n.Id == dto.NoteId);
 
             if (note == null)
-                return NotFound("Нотатку не знайдено");
+                return NotFound("Note not found");
 
             if (!await _context.Tags.AnyAsync(t => t.Id == dto.TagId))
-                return NotFound("Тег не знайдено");
+                return NotFound("Tag not found");
 
-            // Уникати дублювання
             if (note.NoteTags.Any(nt => nt.TagId == dto.TagId))
-                return BadRequest("Тег вже прив’язаний");
+                return BadRequest("Tag already added");
 
             note.NoteTags.Add(new NoteTag
             {
@@ -167,16 +154,16 @@ namespace NotesApp.Controllers
         public async Task<IActionResult> RemoveTagFromNote(int noteId, int tagId)
         {
             var noteTag = await _context.NoteTags
-                .FirstOrDefaultAsync(nt => nt.NoteId == noteId && nt.TagId == tagId);
+                .FirstOrDefaultAsync(nt =>
+                    nt.NoteId == noteId &&
+                    nt.TagId == tagId);
 
             if (noteTag == null)
-                return NotFound("Не знайдено зв’язку між нотаткою та тегом");
+                return NotFound("Association not found");
 
             _context.NoteTags.Remove(noteTag);
             await _context.SaveChangesAsync();
-
             return Ok();
         }
-
     }
 }
