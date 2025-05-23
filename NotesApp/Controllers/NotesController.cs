@@ -116,5 +116,67 @@ namespace NotesApp.Controllers
             _context.NoteHistories.Add(history);
             await _context.SaveChangesAsync();
         }
+
+        [HttpPost]
+        [Route("Notes/AddTagToNote")]
+        public async Task<IActionResult> AddTagToNote([FromBody] TagNoteDto dto)
+        {
+            var note = await _context.Notes
+                .Include(n => n.NoteTags)
+                .FirstOrDefaultAsync(n => n.Id == dto.NoteId);
+
+            if (note == null)
+                return NotFound("Нотатку не знайдено");
+
+            if (!await _context.Tags.AnyAsync(t => t.Id == dto.TagId))
+                return NotFound("Тег не знайдено");
+
+            // Уникати дублювання
+            if (note.NoteTags.Any(nt => nt.TagId == dto.TagId))
+                return BadRequest("Тег вже прив’язаний");
+
+            note.NoteTags.Add(new NoteTag
+            {
+                NoteId = dto.NoteId,
+                TagId = dto.TagId
+            });
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNoteTags(int noteId)
+        {
+            var tags = await _context.NoteTags
+                .Where(nt => nt.NoteId == noteId)
+                .Include(nt => nt.Tag)
+                .Select(nt => new {
+                    id = nt.TagId,
+                    name = nt.Tag.Name,
+                    color = nt.Tag.Color
+                })
+                .ToListAsync();
+
+            return Ok(tags);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Notes/RemoveTagFromNote")]
+        public async Task<IActionResult> RemoveTagFromNote(int noteId, int tagId)
+        {
+            var noteTag = await _context.NoteTags
+                .FirstOrDefaultAsync(nt => nt.NoteId == noteId && nt.TagId == tagId);
+
+            if (noteTag == null)
+                return NotFound("Не знайдено зв’язку між нотаткою та тегом");
+
+            _context.NoteTags.Remove(noteTag);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
     }
 }

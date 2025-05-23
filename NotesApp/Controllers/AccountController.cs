@@ -103,5 +103,17 @@ namespace NotesApp.Controllers
 
             return RedirectToAction("Profile");
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetCurrentUserId()
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("Не вдалося отримати ID користувача");
+
+            return Ok(userId);
+        }
     }
 }
