@@ -602,3 +602,6 @@ D:\2_course\KPZ\mkr2\KPZ_lab6\NotesApp\obj\Debug\net8.0\refint\NotesApp.dll
 D:\2_course\KPZ\mkr2\KPZ_lab6\NotesApp\obj\Debug\net8.0\NotesApp.pdb
 D:\2_course\KPZ\mkr2\KPZ_lab6\NotesApp\obj\Debug\net8.0\NotesApp.genruntimeconfig.cache
 D:\2_course\KPZ\mkr2\KPZ_lab6\NotesApp\obj\Debug\net8.0\ref\NotesApp.dll
+C:\Users\user\Source\Repos\KPZ_lab6\NotesApp\obj\Debug\net8.0\NotesApp.dll
+C:\Users\user\Source\Repos\KPZ_lab6\NotesApp\obj\Debug\net8.0\refint\NotesApp.dll
+C:\Users\user\Source\Repos\KPZ_lab6\NotesApp\obj\Debug\net8.0\NotesApp.pdb
