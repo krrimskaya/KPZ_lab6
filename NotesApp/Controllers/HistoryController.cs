@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NotesApp.Data;
 using NotesApp.Models;
+using NotesApp.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,31 +10,25 @@ namespace NotesApp.Controllers
     [Authorize]
     public class HistoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IHistoryService _historyService;
 
-        public HistoryController(ApplicationDbContext context)
+        public HistoryController(IHistoryService historyService)
         {
-            _context = context;
+            _historyService = historyService;
         }
 
         public async Task<IActionResult> Index(int? tagId)
         {
-            IQueryable<NoteHistory> query = _context.NoteHistories
-                .Include(nh => nh.Note)
-                .ThenInclude(n => n.NoteTags)
-                .ThenInclude(nt => nt.Tag);
+            var histories = await _historyService.GetAllAsync(tagId);
 
-            if (tagId.HasValue)
-            {
-                query = query.Where(nh => nh.Note.NoteTags.Any(nt => nt.TagId == tagId));
-            }
+            // для фільтрації списку тегів у ViewBag
+            var tags = histories
+                .SelectMany(h => h.Note.NoteTags.Select(nt => nt.Tag))
+                .Distinct()
+                .ToList();
 
-            var histories = await query.OrderByDescending(nh => nh.ChangedAt).ToListAsync();
-            
-            var tags = await _context.Tags.ToListAsync();
             ViewBag.Tags = tags;
             ViewBag.SelectedTagId = tagId;
-
             return View(histories);
         }
 
@@ -43,10 +36,7 @@ namespace NotesApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearAll()
         {
-            var allHistory = await _context.NoteHistories.ToListAsync();
-            _context.NoteHistories.RemoveRange(allHistory);
-            await _context.SaveChangesAsync();
-
+            await _historyService.ClearAllAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -54,15 +44,7 @@ namespace NotesApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearByTag(int tagId)
         {
-            var historiesToDelete = await _context.NoteHistories
-                .Include(nh => nh.Note)
-                .ThenInclude(n => n.NoteTags)
-                .Where(nh => nh.Note.NoteTags.Any(nt => nt.TagId == tagId))
-                .ToListAsync();
-
-            _context.NoteHistories.RemoveRange(historiesToDelete);
-            await _context.SaveChangesAsync();
-
+            await _historyService.ClearByTagAsync(tagId);
             return RedirectToAction(nameof(Index));
         }
     }
