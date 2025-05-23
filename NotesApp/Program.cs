@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
 using NotesApp.Services;
+using NotesApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 // Register our custom services
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<NoteService>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

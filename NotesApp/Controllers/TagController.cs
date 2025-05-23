@@ -1,102 +1,72 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NotesApp.Data;
-using NotesApp.Models;
-using System.Linq;
-using System.Threading.Tasks;
+using NotesApp.Services.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
-namespace NotesApp.Controllers
+[Authorize]
+[Route("Tag")]
+[ApiController]
+public class TagController : ControllerBase
 {
-    [Authorize]
-    public class TagController : Controller
+    private readonly ITagRepository _tagRepository;
+    private readonly UserManager<IdentityUser> _userManager;
+
+    public TagController(ITagRepository tagRepository, UserManager<IdentityUser> userManager)
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        _tagRepository = tagRepository;
+        _userManager = userManager;
+    }
 
-        public TagController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        var userId = _userManager.GetUserId(User);
+        var tags = await _tagRepository.GetUserTagsAsync(userId);
+        return Ok(tags);
+    }
+
+    [HttpPost("Create")]
+    public async Task<IActionResult> Create([FromBody] TagCreateRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = _userManager.GetUserId(User);
+        var createdTag = await _tagRepository.CreateTagAsync(request.Name, request.Color, userId);
+        return Ok(createdTag);
+    }
+
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        try
         {
-            _context = context;
-            _userManager = userManager;
+            await _tagRepository.DeleteTagAsync(id, userId);
+            return NoContent();
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        catch (ArgumentException ex)
         {
-            var userId = _userManager.GetUserId(User);
-            var tags = await _context.Tags
-                .Where(t => t.UserId == null || t.UserId == userId)
-                .Select(t => new 
-                {
-                    id = t.Id,
-                    name = t.Name,
-                    color = t.Color,
-                    userId = t.UserId,
-                    isCustom = t.UserId != null
-                })
-                .ToListAsync();
-
-            return Ok(tags);
+            return NotFound(ex.Message);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string name, string color)
+        catch (UnauthorizedAccessException ex)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return BadRequest("Назва тегу обов'язкова");
-            }
-
-            var userId = _userManager.GetUserId(User);
-            
-            var tag = new Tag
-            {
-                Name = name.Trim(),
-                Color = color ?? "#6c757d",
-                UserId = userId
-            };
-
-            _context.Tags.Add(tag);
-            await _context.SaveChangesAsync();
-
-            return Ok(new 
-            {
-                id = tag.Id,
-                name = tag.Name,
-                color = tag.Color,
-                userId = tag.UserId,
-                isCustom = tag.UserId != null
-            });
+            return Forbid(ex.Message);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        catch (InvalidOperationException ex)
         {
-            var tag = await _context.Tags.FindAsync(id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            var userId = _userManager.GetUserId(User);
-            if (tag.UserId == null || tag.UserId != userId)
-            {
-                return Forbid("Ви не можете видалити цей тег");
-            }
-
-            var isUsed = await _context.NoteTags.AnyAsync(nt => nt.TagId == id);
-            if (isUsed)
-            {
-                return BadRequest("Цей тег використовується в нотатках і не може бути видалений");
-            }
-
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest(ex.Message);
         }
+    }
+
+    public class TagCreateRequest
+    {
+        [Required(ErrorMessage = "Назва тегу обов'язкова")]
+        [StringLength(50, ErrorMessage = "Назва не може перевищувати 50 символів")]
+        public string Name { get; set; }
+
+        public string Color { get; set; } = "#6c757d";
     }
 }

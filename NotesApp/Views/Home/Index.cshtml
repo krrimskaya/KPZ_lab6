@@ -357,7 +357,7 @@
             $(document).on('click', '.delete-note-btn', function(e) {
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
-                
+
                 $.get(`/Notes/GetNoteForDelete?id=${noteId}`, function(note) {
                     noteToDelete = note.id;
                     $('#noteToDeleteTitle').text(note.title);
@@ -369,10 +369,10 @@
 
             $('#confirmDeleteNote').click(function() {
                 if (!noteToDelete) return;
-                
+
                 const $noteCard = $(`#note-card-${noteToDelete}`);
                 $noteCard.addClass('fade-out');
-                
+
                 $.post('/Notes/Delete', {
                     id: noteToDelete,
                     __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
@@ -380,7 +380,7 @@
                 .done(function() {
                     setTimeout(() => {
                         $noteCard.closest('.col').remove();
-                        
+
                         if ($('#notes-container .col').length === 0) {
                             location.reload();
                         }
@@ -401,7 +401,7 @@
                     tags.forEach(function(tag) {
                         const isSelected = selectedTags.includes(tag.id);
                         $('#tagsContainer').append(`
-                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}" 
+                            <div class="tag-item badge p-2 mb-2 ${isSelected ? 'selected' : ''}"
                                  style="background-color: ${tag.color}"
                                  data-tag-id="${tag.id}">
                                 ${tag.name}
@@ -416,7 +416,7 @@
             $(document).on('click', '.tag-item', function() {
                 const tagId = $(this).data('tag-id');
                 const index = selectedTags.indexOf(tagId);
-                
+
                 if (index === -1) {
                     selectedTags.push(tagId);
                     $(this).addClass('selected');
@@ -429,14 +429,18 @@
             });
 
             // Add selected tags to note
-            $('#addSelectedTags').click(function() {
+            $('#addSelectedTags').click(function () {
                 if (!currentNoteId || selectedTags.length === 0) return;
-                
+
                 const requests = selectedTags.map(tagId => {
-                    return $.post('/Notes/AddTagToNote', {
-                        noteId: currentNoteId,
-                        tagId: tagId,
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    return $.ajax({
+                        url: '/Notes/AddTagToNote',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            noteId: currentNoteId,
+                            tagId: tagId
+                        })
                     });
                 });
 
@@ -446,9 +450,11 @@
                         closeTagsModalProperly();
                     })
                     .catch(error => {
-                        console.error('Error adding tags:', error);
+                        console.error('Помилка додавання тегів:', error);
+                        alert('Не вдалося додати один або кілька тегів');
                     });
-            });
+             });
+
 
             // Close tags modal properly
             function closeTagsModalProperly() {
@@ -468,7 +474,7 @@
                         $(`#noteTags-${noteId}`).append(`
                             <span class="badge me-1 mb-1" style="background-color: ${tag.color}">
                                 ${tag.name}
-                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag" 
+                                <button class="btn btn-sm btn-link text-white p-0 ms-1 remove-note-tag"
                                         data-note-id="${noteId}" data-tag-id="${tag.id}">
                                     <i class="bi bi-x"></i>
                                 </button>
@@ -487,34 +493,43 @@
             });
 
             // Create new tag
-            $('#create-tag-form').on('submit', function(e) {
+            $('#create-tag-form').on('submit', function (e) {
                 e.preventDefault();
                 const tagName = $('#tagName').val().trim();
-                
+                const selectedColor = $('#tagColor').val();
+
                 if (!tagName) {
                     alert('Будь ласка, введіть назву тегу');
                     return;
                 }
 
-                $.post('/Tag/Create', {
-                    name: tagName,
-                    color: selectedColor,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                }, function(tag) {
-                    $('#createTagModal').modal('hide');
-                    $('#tagName').val('');
-                    loadTags(); // Refresh tags list
-                }).fail(function() {
-                    alert('Не вдалося створити тег');
+                $.ajax({
+                    url: '/Tag/Create',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: tagName,
+                        color: selectedColor
+                    }),
+                    success: function (tag) {
+                        $('#createTagModal').modal('hide');
+                        $('#tagName').val('');
+                        loadTags(); // оновлення списку
+                    },
+                    error: function (xhr) {
+                        console.error('Error adding tag:', xhr);
+                        alert('Не вдалося створити тег');
+                    }
                 });
             });
+
 
             // Remove tag from note
             $(document).on('click', '.remove-note-tag', function(e) {
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
                 const tagId = $(this).data('tag-id');
-                
+
                 $.post('/Notes/RemoveTagFromNote', {
                     noteId: noteId,
                     tagId: tagId,
@@ -531,10 +546,10 @@
             });
 
             // Initialize tags for existing notes
-            @foreach (var note in Model)
-            {
-                <text>loadNoteTags(@note.Id);</text>
-            }
+        @foreach (var note in Model)
+        {
+            <text>loadNoteTags(@note.Id);</text>
+        }
 
             // Handle modal cleanup
             $('#tagsModal').on('hidden.bs.modal', function () {
@@ -559,7 +574,7 @@
             // Handle edit form submission
             $('#edit-note-form').on('submit', function(e) {
                 e.preventDefault();
-                
+
                 const formData = {
                     id: $('#editNoteId').val(),
                     title: $('#editNoteTitle').val(),
@@ -567,7 +582,7 @@
                     reminderAt: $('#editNoteReminderAt').val(),
                     __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                 };
-                
+
                 $.post('/Notes/Edit', formData, function(response) {
                     $('#editModal').modal('hide');
                     location.reload();
@@ -579,24 +594,24 @@
             // Check for reminders
             function checkReminders() {
                 var now = new Date();
-                
-                @foreach (var note in Model.Where(n => n.ReminderAt.HasValue))
-                {
-                    <text>
-                    var reminderTime = new Date('@note.ReminderAt?.ToString("o")');
-                    
-                    if (now >= reminderTime) {
-                        showNotification(@note.Id, '@Html.Raw(note.Title.Replace("'", "\\'"))', '@Html.Raw(note.Content.Replace("'", "\\'"))');
-                        
-                        $.post('/Notes/ClearReminder', { 
-                            id: @note.Id,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                        }).then(function() {
-                            $(`#note-card-${@note.Id}`).remove();
-                        });
-                    }
-                    </text>
-                }
+
+        @foreach (var note in Model.Where(n => n.ReminderAt.HasValue))
+        {
+            <text>
+                        var reminderTime = new Date('@note.ReminderAt?.ToString("o")');
+
+                        if (now >= reminderTime) {
+                            showNotification(@note.Id, '@Html.Raw(note.Title.Replace("'", "\\'"))', '@Html.Raw(note.Content.Replace("'", "\\'"))');
+
+                            $.post('/Notes/ClearReminder', {
+                                id: @note.Id,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            }).then(function() {
+                                $(`#note-card-${@note.Id}`).remove();
+                            });
+                        }
+            </text>
+        }
             }
 
             // Show notification
@@ -614,14 +629,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 `);
-                
+
                 $('#notifications-container').append(notification);
-                
+
                 setTimeout(() => {
                     $(`#${notificationId}`).addClass('fade-out');
                     setTimeout(() => $(`#${notificationId}`).remove(), 500);
                 }, 10000);
-                
+
                 notification.find('.btn-close').click(function() {
                     $(`#${notificationId}`).remove();
                 });
