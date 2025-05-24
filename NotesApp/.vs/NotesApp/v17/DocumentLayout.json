@@ -1,42 +1,50 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\",
+  "WorkspaceRootPath": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\controllers\\tagcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\tagcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\services\\tagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:services\\tagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\services\\interfaces\\itagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\services\\interfaces\\itagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:services\\interfaces\\itagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\models\\tagnotedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\controllers\\tagcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\tagcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\services\\tagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:services\\tagrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\models\\tagnotedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:models\\tagnotedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\models\\tagdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\models\\tagdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:models\\tagdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|c:\\users\\user\\source\\repos\\kpz_lab6\\notesapp\\controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|d:\\2_course\\kpz\\mkr2\\kpz_lab6\\notesapp\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C1BDD16F-F2E0-4CCA-9458-32966181A64D}|NotesApp.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,8 +54,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 13,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
@@ -66,10 +98,6 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
@@ -78,120 +106,136 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Controllers\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T21:56:16.079Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAMMBAAAAAAAAAAAAANcBAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-23T01:06:33.989Z",
+              "Title": "ProfileController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\ProfileController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProfileController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\ProfileController.cs",
+              "RelativeToolTip": "Controllers\\ProfileController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T21:55:20.255Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAADwv1gAAAAKAAAAAAAAAA==",
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:05:00.872Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "TagRepository.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Services\\TagRepository.cs",
-              "RelativeDocumentMoniker": "Services\\TagRepository.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Services\\TagRepository.cs",
-              "RelativeToolTip": "Services\\TagRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:03:44.215Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T21:54:48.984Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "ITagRepository.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Services\\Interfaces\\ITagRepository.cs",
-              "RelativeDocumentMoniker": "Services\\Interfaces\\ITagRepository.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Services\\Interfaces\\ITagRepository.cs",
-              "RelativeToolTip": "Services\\Interfaces\\ITagRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:03:43.001Z",
-              "EditorCaption": ""
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAH4BAAAAAAAAAAAAANcBAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-23T01:06:33.989Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "TagNoteDto.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Models\\TagNoteDto.cs",
-              "RelativeDocumentMoniker": "Models\\TagNoteDto.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Models\\TagNoteDto.cs",
-              "RelativeToolTip": "Models\\TagNoteDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAADwv1gAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:03:08.627Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TagDto.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Models\\TagDto.cs",
-              "RelativeDocumentMoniker": "Models\\TagDto.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Models\\TagDto.cs",
-              "RelativeToolTip": "Models\\TagDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:03:03.827Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TagController.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\TagController.cs",
-              "RelativeDocumentMoniker": "Controllers\\TagController.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\TagController.cs",
-              "RelativeToolTip": "Controllers\\TagController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:02:21.503Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T01:05:00.872Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "NotesController.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\NotesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\NotesController.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\NotesController.cs",
-              "RelativeToolTip": "Controllers\\NotesController.cs",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAuwK4AAAAuAAAAAAAAAA==",
+              "Title": "TagRepository.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Services\\TagRepository.cs",
+              "RelativeDocumentMoniker": "Services\\TagRepository.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Services\\TagRepository.cs",
+              "RelativeToolTip": "Services\\TagRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:01:29.941Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T01:03:44.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ITagRepository.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Services\\Interfaces\\ITagRepository.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\ITagRepository.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Services\\Interfaces\\ITagRepository.cs",
+              "RelativeToolTip": "Services\\Interfaces\\ITagRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T01:03:43.001Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "D:\\2_course\\KPZ\\mkr2\\KPZ_lab6\\NotesApp\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAwwHQAAAAJAAAAAAAAAA==",
+              "Title": "TagNoteDto.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Models\\TagNoteDto.cs",
+              "RelativeDocumentMoniker": "Models\\TagNoteDto.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Models\\TagNoteDto.cs",
+              "RelativeToolTip": "Models\\TagNoteDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T01:01:15.37Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T01:03:08.627Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TagDto.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Models\\TagDto.cs",
+              "RelativeDocumentMoniker": "Models\\TagDto.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Models\\TagDto.cs",
+              "RelativeToolTip": "Models\\TagDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T01:03:03.827Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TagController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\TagController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TagController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\TagController.cs",
+              "RelativeToolTip": "Controllers\\TagController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T01:02:21.503Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "NotesController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\NotesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NotesController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\KPZ_lab6\\NotesApp\\Controllers\\NotesController.cs",
+              "RelativeToolTip": "Controllers\\NotesController.cs",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAuwK4AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-23T01:01:29.941Z"
             }
           ]
         }
